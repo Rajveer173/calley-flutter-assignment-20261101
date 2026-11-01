@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 root=Path(__file__).resolve().parents[1]
 adb=Path.home()/'AppData/Local/Android/sdk/platform-tools/adb.exe'
@@ -20,6 +21,9 @@ with (out/'android-integration-test.log').open('w',encoding='utf-8') as log:
             if 'CAPTURE_READY' in line and recorder is None:
                 recorder=subprocess.Popen([str(adb),'-s',device,'shell','screenrecord','--bit-rate','3000000','--time-limit','120',remote],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         status=process.wait()
+    except BaseException:
+        subprocess.run(['taskkill','/PID',str(process.pid),'/T','/F'],capture_output=True)
+        raise
     finally:
         if recorder is not None:
             subprocess.run([str(adb),'-s',device,'shell','pkill','-2','screenrecord'],capture_output=True)

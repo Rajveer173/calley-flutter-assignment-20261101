@@ -32,9 +32,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/deliverables/*.apk
-/deliverables/*.mp4
-/deliverables/*.zip
+/deliverables/
 
 # Symbolication related
 app.*.symbols
